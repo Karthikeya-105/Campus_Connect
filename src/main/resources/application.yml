@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/placement_db?createDatabaseIfNotExist=true
+    username: root
+    password: 12345db
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update        # 🔥 This creates tables automatically for us!
+    show-sql: true            # Prints SQL in console so you can see what Hibernate is doing
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+server:
+  port: 8080
