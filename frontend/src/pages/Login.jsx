@@ -1,79 +1,81 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
+import AuthCard from '../components/AuthCard';
+import Input from '../components/Input';
+import Button from '../components/Button';
 
 function Login() {
-    // These state variables hold what the user types.
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState(''); // For showing error messages
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    // useNavigate lets us redirect after successful login
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Stop the browser from reloading the page
-        setError('');       // Clear any previous error
+        e.preventDefault();
+        setError('');
+        setLoading(true);
 
         try {
-            // Send POST request to Spring Boot
-            const response = await api.post('/auth/login'
-            , { email, password });
-
-            // Extract the data from the response
+            const response = await api.post('/auth/login', { email, password });
             const { token, studentId, name, email: userEmail } = response.data;
 
-            // Save to localStorage (browser's persistent storage)
             localStorage.setItem('token', token);
             localStorage.setItem('studentId', studentId);
             localStorage.setItem('name', name);
             localStorage.setItem('email', userEmail);
+            localStorage.setItem('role', 'STUDENT');
 
-            // Redirect to dashboard
             navigate('/dashboard');
-
         } catch (err) {
-            // If the backend returned an error, show its message
-            if (err.response && err.response.data) {
-                setError(err.response.data.error || 'Login failed');
-            } else {
-                setError('Network error. Is the backend running?');
-            }
+            setError(err.response?.data?.error || 'Login failed. Please try again.');
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div style={{ maxWidth: '400px', margin: '50px auto' }}>
-            <h2>Student Login</h2>
+        <AuthCard
+            title="Welcome back"
+            subtitle="Sign in to your CampusConnect account"
+            footer={
+                <>
+                    Don't have an account? <Link to="/register">Create one</Link>
+                </>
+            }
+        >
+            {error && <div className="error-banner">{error}</div>}
 
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-
-            <form onSubmit={handleSubmit}>
-                <input
+            <form onSubmit={handleSubmit} className="auth-form">
+                <Input
+                    label="Email"
                     type="email"
-                    placeholder="Email"
+                    name="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@college.edu"
+                    autoComplete="email"
                     required
                 />
-                <br /><br />
 
-                <input
+                <Input
+                    label="Password"
                     type="password"
-                    placeholder="Password"
+                    name="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    autoComplete="current-password"
                     required
                 />
-                <br /><br />
 
-                <button type="submit">Login</button>
+                <Button type="submit" loading={loading}>
+                    Sign in
+                </Button>
             </form>
-
-            <p>
-                Don't have an account? <Link to="/register">Register here</Link>
-            </p>
-        </div>
+        </AuthCard>
     );
 }
 

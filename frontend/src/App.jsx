@@ -4,7 +4,7 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
-
+import './styles/global.css';
 function App() {
     return (
         <BrowserRouter>

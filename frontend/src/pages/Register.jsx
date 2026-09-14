@@ -1,70 +1,82 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // For redirecting after success
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
+import AuthCard from '../components/AuthCard';
+import Input from '../components/Input';
+import Button from '../components/Button';
 
 function Register() {
-    // 1. STATE: These variables hold the form data
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [rollNumber, setRollNumber] = useState('');
-    const [branch, setBranch] = useState('');
-    const [cgpa, setCgpa] = useState('');
-    const [error, setError] = useState(''); // To show backend errors
+    const [form, setForm] = useState({
+        name: '',
+        email: '',
+        password: '',
+        rollNumber: '',
+        branch: '',
+        cgpa: '',
+    });
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(false);
+
     const navigate = useNavigate();
 
-    // 2. HANDLE SUBMIT: This runs when the user clicks the button
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
+
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevents the browser from refreshing the page
-        setError(''); // Clear old errors
+        e.preventDefault();
+        setError('');
+        setSuccess('');
+        setLoading(true);
 
         try {
-            // Send POST request to your Spring Boot API
-            const response = await api.post('/students/register', {
-                name,
-                email,
-                password,
-                rollNumber,
-                branch,
-                cgpa: parseFloat(cgpa), // Convert string to number
+            await api.post('/students/register', {
+                ...form,
+                cgpa: parseFloat(form.cgpa),
             });
 
-            console.log('Registration Success:', response.data);
-            // 3. REDIRECT: Send the user to the Login page
-            navigate('/login');
-
+            setSuccess('Account created! Redirecting to login…');
+            setTimeout(() => navigate('/login'), 1200);
         } catch (err) {
-            // 4. ERROR HANDLING: Catch the error from your GlobalExceptionHandler
-            if (err.response && err.response.data) {
-                // Spring Boot sends a JSON like { "error": "Email already exists!" }
-                setError(err.response.data.error || 'Registration failed');
+            const data = err.response?.data;
+            if (typeof data === 'object' && data !== null && !data.error) {
+                // Validation errors: { field: "message" }
+                setError(Object.values(data).join(', '));
             } else {
-                setError('Network error. Is the backend running?');
+                setError(data?.error || 'Registration failed. Please try again.');
             }
+        } finally {
+            setLoading(false);
         }
     };
 
-    // 5. THE UI: The actual HTML/JSX
     return (
-        <div style={{ maxWidth: '400px', margin: '50px auto' }}>
-            <h2>Student Registration</h2>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <input type="text" placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} required />
-                <br /><br />
-                <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                <br /><br />
-                <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                <br /><br />
-                <input type="text" placeholder="Roll Number" value={rollNumber} onChange={(e) => setRollNumber(e.target.value)} />
-                <br /><br />
-                <input type="text" placeholder="Branch" value={branch} onChange={(e) => setBranch(e.target.value)} />
-                <br /><br />
-                <input type="number" step="0.01" placeholder="CGPA" value={cgpa} onChange={(e) => setCgpa(e.target.value)} />
-                <br /><br />
-                <button type="submit">Register</button>
+        <AuthCard
+            title="Create your account"
+            subtitle="Start your placement journey with CampusConnect"
+            footer={
+                <>
+                    Already registered? <Link to="/login">Sign in</Link>
+                </>
+            }
+        >
+            {error && <div className="error-banner">{error}</div>}
+            {success && <div className="success-banner">{success}</div>}
+
+            <form onSubmit={handleSubmit} className="auth-form">
+                <Input label="Full name" name="name" value={form.name} onChange={handleChange} placeholder="Alice Wonderland" required />
+                <Input label="Email" type="email" name="email" value={form.email} onChange={handleChange} placeholder="you@college.edu" required />
+                <Input label="Password" type="password" name="password" value={form.password} onChange={handleChange} placeholder="••••••••" required />
+                <Input label="Roll number" name="rollNumber" value={form.rollNumber} onChange={handleChange} placeholder="CS2201" />
+                <Input label="Branch" name="branch" value={form.branch} onChange={handleChange} placeholder="Computer Science" />
+                <Input label="CGPA" type="number" name="cgpa" value={form.cgpa} onChange={handleChange} placeholder="8.5" required />
+
+                <Button type="submit" loading={loading}>
+                    Create account
+                </Button>
             </form>
-        </div>
+        </AuthCard>
     );
 }
 
