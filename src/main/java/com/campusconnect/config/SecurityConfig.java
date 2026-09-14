@@ -30,6 +30,7 @@ public class SecurityConfig {
         http
                 // 1. Disable CSRF (unnecessary for stateless REST APIs)
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configure(http))
 
                 // 2. Do not create HTTP sessions — JWT is stateless
                 .sessionManagement(session ->
