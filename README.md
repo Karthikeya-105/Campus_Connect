@@ -49,3 +49,12 @@ CampusConnect Backend is running!
 - Analytics
 - Documents
 - Audit logs
+
+## ✨ Current Features
+
+- ✅ Student Registration (BCrypt password hashing)
+- ✅ JWT-based Login
+- ✅ Protected Dashboard (auth guard)
+- ✅ React frontend with Axios interceptor
+- ✅ Global Exception Handling
+- ✅ CORS configured
