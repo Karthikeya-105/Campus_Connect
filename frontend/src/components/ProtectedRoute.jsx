@@ -1,15 +1,21 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 
-function ProtectedRoute({ children }) {
+function ProtectedRoute({ children, requiredRole }) {
     const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
 
     if (!token) {
-        // Not logged in — redirect to /login
         return <Navigate to="/login" replace />;
     }
 
-    // Logged in — render whatever page was wrapped
+    if (requiredRole && role !== requiredRole) {
+        // Wrong role → send to their own dashboard
+        if (role === 'COMPANY') return <Navigate to="/company/dashboard" replace />;
+        if (role === 'STUDENT') return <Navigate to="/dashboard" replace />;
+        return <Navigate to="/login" replace />;
+    }
+
     return children;
 }
 

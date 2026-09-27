@@ -19,19 +19,19 @@ public class AuthService {
 
     public LoginResponseDTO login(LoginRequestDTO request) {
 
-        // 1. Find the student by email
+        // 1. Find student by email
         Student student = studentRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Invalid credentials"));
 
-        // 2. Verify the password using BCrypt
+        // 2. Verify password
         if (!passwordEncoder.matches(request.getPassword(), student.getPassword())) {
             throw new RuntimeException("Invalid credentials");
         }
 
-        // 3. Generate a JWT
-        String token = jwtUtil.generateToken(student.getEmail());
+        // 3. Generate JWT with STUDENT role
+        String token = jwtUtil.generateToken(student.getEmail(), "STUDENT");
 
-        // 4. Build and return the response DTO
+        // 4. Build response
         LoginResponseDTO response = new LoginResponseDTO();
         response.setToken(token);
         response.setStudentId(student.getId());

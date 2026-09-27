@@ -98,3 +98,47 @@ a:hover {
     border: 1px solid #bbf7d0;
     animation: fadeInUp 300ms ease both;
 }
+.link-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border-radius: 10px;
+    text-decoration: none;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.link-btn:hover {
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+}
+
+.link-btn.secondary {
+    color: var(--primary);
+    background: #fff;
+    border: 1.5px solid var(--primary);
+}
+.link-btn.secondary:hover {
+    color: #fff;
+    background: var(--primary);
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
+}
+
+.link-btn.ghost {
+    color: var(--text);
+    background: transparent;
+    border: 1.5px solid var(--border);
+    box-shadow: none;
+}
+.link-btn.ghost:hover {
+    color: var(--primary);
+    border-color: var(--primary-light);
+    background: var(--bg-from);
+}

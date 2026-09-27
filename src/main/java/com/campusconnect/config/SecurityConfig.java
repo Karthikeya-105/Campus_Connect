@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -47,12 +48,23 @@ public class SecurityConfig {
 
                 // 4. Which endpoints are public vs protected
                 .authorizeHttpRequests(auth -> auth
+                        // Auth endpoints — public
                         .requestMatchers("/api/auth/**").permitAll()
+
+                        // Registration endpoints — public
                         .requestMatchers("/api/students/register").permitAll()
-                        .requestMatchers("/api/public/**").permitAll()
+                        .requestMatchers("/api/companies/register").permitAll()
+
+                        // Job browsing — public
+                        .requestMatchers(HttpMethod.GET, "/api/jobs/active").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/jobs/{id}").permitAll()
+
+                        // Job creation — companies only
+                        .requestMatchers(HttpMethod.POST, "/api/jobs").hasRole("COMPANY")
+
+                        // Everything else requires authentication
                         .anyRequest().authenticated()
                 )
-
                 // 5. Register our JWT filter BEFORE Spring's default filter
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
