@@ -13,6 +13,8 @@ import CompanyLogin from './pages/CompanyLogin';
 import CompanyDashboard from './pages/CompanyDashboard';
 import CompanyJobs from './pages/CompanyJobs';
 import PostJob from './pages/PostJob';
+import Jobs from './pages/Jobs';
+import JobDetails from './pages/JobDetails';
 
 function App() {
     return (
@@ -57,6 +59,8 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+                <Route path="/jobs" element={<Jobs />} />
+                <Route path="/jobs/:id" element={<JobDetails />} />
             </Routes>
         </BrowserRouter>
     );

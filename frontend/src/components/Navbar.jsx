@@ -21,12 +21,15 @@ function Navbar() {
             <div className="flex items-center gap-3 text-sm md:gap-6">
                 {token ? (
                     <>
-            <span className="hidden text-slate-500 md:inline">
+            <span className="hidden text-slate-900 md:inline">
               {name}{' '}
                 <span className="ml-1 text-xs font-semibold uppercase tracking-wide text-indigo-600">
                 {role}
               </span>
             </span>
+                        <Link to="/jobs" className="font-medium text-slate-700 hover:text-indigo-600 transition-colors">
+                            Jobs
+                        </Link>
                         <Link
                             to={role === 'COMPANY' ? '/company/dashboard' : '/dashboard'}
                             className="font-medium text-slate-700 hover:text-indigo-600 transition-colors"
@@ -39,6 +42,7 @@ function Navbar() {
                         >
                             Logout
                         </button>
+
                     </>
                 ) : (
                     <>
@@ -60,6 +64,7 @@ function Navbar() {
                         >
                             Sign Up
                         </Link>
+
                     </>
                 )}
             </div>

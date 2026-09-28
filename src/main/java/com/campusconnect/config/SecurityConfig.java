@@ -61,6 +61,10 @@ public class SecurityConfig {
 
                         // Job creation — companies only
                         .requestMatchers(HttpMethod.POST, "/api/jobs").hasRole("COMPANY")
+                        .requestMatchers(HttpMethod.POST, "/api/applications").hasRole("STUDENT")
+                        .requestMatchers(HttpMethod.GET, "/api/applications/me").hasRole("STUDENT")
+                        .requestMatchers(HttpMethod.GET, "/api/applications/job/**").hasRole("COMPANY")
+                        .requestMatchers(HttpMethod.PATCH, "/api/applications/**").hasRole("COMPANY")
 
                         // Everything else requires authentication
                         .anyRequest().authenticated()
