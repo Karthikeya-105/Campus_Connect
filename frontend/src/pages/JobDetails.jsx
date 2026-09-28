@@ -9,6 +9,12 @@ function JobDetails() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
+    // Apply-related state
+    const [applying, setApplying] = useState(false);
+    const [applied, setApplied] = useState(false);
+    const [applyError, setApplyError] = useState('');
+    const [applySuccess, setApplySuccess] = useState('');
+
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
 
@@ -26,15 +32,33 @@ function JobDetails() {
         fetchJob();
     }, [id]);
 
-    const handleApply = () => {
+    const handleApply = async () => {
         if (!token) return navigate('/login');
         if (role !== 'STUDENT') return;
-        // We'll wire the real application POST in Module 7
-        alert('Application flow will be built in the next module.');
+
+        setApplyError('');
+        setApplySuccess('');
+        setApplying(true);
+
+        try {
+            await api.post('/applications', { jobPostingId: Number(id) });
+            setApplied(true);
+            setApplySuccess('Application submitted successfully!');
+        } catch (err) {
+            const data = err.response?.data;
+            setApplyError(data?.error || 'Failed to submit application.');
+        } finally {
+            setApplying(false);
+        }
     };
 
     if (loading) return <div className="text-center py-20 text-slate-500">Loading…</div>;
-    if (error) return <div className="max-w-3xl mx-auto mt-10 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-700">{error}</div>;
+    if (error)
+        return (
+            <div className="max-w-3xl mx-auto mt-10 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-700">
+                {error}
+            </div>
+        );
     if (!job) return null;
 
     return (
@@ -93,7 +117,10 @@ function JobDetails() {
                             <h3 className="mt-8 text-lg font-semibold text-slate-900">Required Skills</h3>
                             <div className="mt-3 flex flex-wrap gap-2">
                                 {job.requiredSkills.split(',').map((s, i) => (
-                                    <span key={i} className="rounded-md bg-indigo-50 px-3 py-1.5 text-sm font-medium text-indigo-700">
+                                    <span
+                                        key={i}
+                                        className="rounded-md bg-indigo-50 px-3 py-1.5 text-sm font-medium text-indigo-700"
+                                    >
                     {s.trim()}
                   </span>
                                 ))}
@@ -113,12 +140,19 @@ function JobDetails() {
 
                     {token ? (
                         role === 'STUDENT' ? (
-                            <button
-                                onClick={handleApply}
-                                className="rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-700 px-6 py-3 font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/30"
-                            >
-                                Apply for this job
-                            </button>
+                            applied ? (
+                                <span className="rounded-lg bg-green-50 px-6 py-3 font-semibold text-green-700">
+                  ✓ Applied
+                </span>
+                            ) : (
+                                <button
+                                    onClick={handleApply}
+                                    disabled={applying}
+                                    className="rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-700 px-6 py-3 font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/30 disabled:opacity-60 disabled:transform-none"
+                                >
+                                    {applying ? 'Submitting…' : 'Apply for this job'}
+                                </button>
+                            )
                         ) : (
                             <span className="rounded-lg bg-slate-100 px-4 py-2 text-sm text-slate-600">
                 Only students can apply
@@ -133,6 +167,18 @@ function JobDetails() {
                         </Link>
                     )}
                 </div>
+
+                {/* Feedback banners */}
+                {applySuccess && (
+                    <div className="mt-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+                        {applySuccess}
+                    </div>
+                )}
+                {applyError && (
+                    <div className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                        {applyError}
+                    </div>
+                )}
             </div>
         </div>
     );

@@ -21,25 +21,30 @@ function Navbar() {
             <div className="flex items-center gap-3 text-sm md:gap-6">
                 {token ? (
                     <>
-            <span className="hidden text-slate-900 md:inline">
-              {name}{' '}
-                <span className="ml-1 text-xs font-semibold uppercase tracking-wide text-indigo-600">
-                {role}
-              </span>
-            </span>
-                        <Link to="/jobs" className="font-medium text-slate-700 hover:text-indigo-600 transition-colors">
-                            Jobs
-                        </Link>
+    <span className="hidden text-slate-500 md:inline">
+      {name}{' '}
+        <span className="ml-1 text-xs font-semibold uppercase tracking-wide text-indigo-600">
+        {role}
+      </span>
+    </span>
+
+                        {role === 'STUDENT' && (
+                            <Link
+                                to="/applications"
+                                className="font-medium text-slate-700 hover:text-indigo-600 transition-colors"
+                            >
+                                My Applications
+                            </Link>
+                        )}
+
                         <Link
                             to={role === 'COMPANY' ? '/company/dashboard' : '/dashboard'}
                             className="font-medium text-slate-700 hover:text-indigo-600 transition-colors"
                         >
                             Dashboard
                         </Link>
-                        <button
-                            onClick={handleLogout}
-                            className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-700 hover:border-red-200 hover:bg-red-50 hover:text-red-600 transition-all"
-                        >
+
+                        <button onClick={handleLogout} className="...">
                             Logout
                         </button>
 
