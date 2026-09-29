@@ -21,19 +21,42 @@ function Navbar() {
             <div className="flex items-center gap-3 text-sm md:gap-6">
                 {token ? (
                     <>
-    <span className="hidden text-slate-500 md:inline">
-      {name}{' '}
-        <span className="ml-1 text-xs font-semibold uppercase tracking-wide text-indigo-600">
-        {role}
-      </span>
-    </span>
+            <span className="hidden text-slate-500 md:inline">
+              {name}{' '}
+                <span className="ml-1 text-xs font-semibold uppercase tracking-wide text-indigo-600">
+                {role}
+              </span>
+            </span>
 
                         {role === 'STUDENT' && (
+                            <>
+                                <Link
+                                    to="/jobs"
+                                    className="font-medium text-slate-700 hover:text-indigo-600 transition-colors"
+                                >
+                                    Jobs
+                                </Link>
+                                <Link
+                                    to="/applications"
+                                    className="font-medium text-slate-700 hover:text-indigo-600 transition-colors"
+                                >
+                                    Applications
+                                </Link>
+                                <Link
+                                    to="/profile"
+                                    className="font-medium text-slate-700 hover:text-indigo-600 transition-colors"
+                                >
+                                    Profile
+                                </Link>
+                            </>
+                        )}
+
+                        {role === 'COMPANY' && (
                             <Link
-                                to="/applications"
+                                to="/company/jobs"
                                 className="font-medium text-slate-700 hover:text-indigo-600 transition-colors"
                             >
-                                My Applications
+                                My Jobs
                             </Link>
                         )}
 
@@ -44,13 +67,21 @@ function Navbar() {
                             Dashboard
                         </Link>
 
-                        <button onClick={handleLogout} className="...">
+                        <button
+                            onClick={handleLogout}
+                            className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-700 hover:border-red-200 hover:bg-red-50 hover:text-red-600 transition-all"
+                        >
                             Logout
                         </button>
-
                     </>
                 ) : (
                     <>
+                        <Link
+                            to="/jobs"
+                            className="font-medium text-slate-700 hover:text-indigo-600 transition-colors"
+                        >
+                            Jobs
+                        </Link>
                         <Link
                             to="/login"
                             className="font-medium text-slate-700 hover:text-indigo-600 transition-colors"
@@ -69,7 +100,6 @@ function Navbar() {
                         >
                             Sign Up
                         </Link>
-
                     </>
                 )}
             </div>

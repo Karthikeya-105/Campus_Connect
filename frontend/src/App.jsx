@@ -7,13 +7,14 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
-import JobApplicants from './pages/JobApplicants';
+import Profile from './pages/Profile';
 
 import CompanyRegister from './pages/CompanyRegister';
 import CompanyLogin from './pages/CompanyLogin';
 import CompanyDashboard from './pages/CompanyDashboard';
 import CompanyJobs from './pages/CompanyJobs';
 import PostJob from './pages/PostJob';
+import JobApplicants from './pages/JobApplicants';
 
 import Jobs from './pages/Jobs';
 import JobDetails from './pages/JobDetails';
@@ -24,20 +25,17 @@ function App() {
         <BrowserRouter>
             <Navbar />
             <Routes>
-                {/* Redirect root to login */}
                 <Route path="/" element={<Navigate to="/login" replace />} />
 
-                {/* Public routes */}
+                {/* Public */}
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/company/register" element={<CompanyRegister />} />
                 <Route path="/company/login" element={<CompanyLogin />} />
-
-                {/* Public job browsing */}
                 <Route path="/jobs" element={<Jobs />} />
                 <Route path="/jobs/:id" element={<JobDetails />} />
 
-                {/* Student protected routes */}
+                {/* Student */}
                 <Route
                     path="/dashboard"
                     element={
@@ -54,8 +52,16 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+                <Route
+                    path="/profile"
+                    element={
+                        <ProtectedRoute requiredRole="STUDENT">
+                            <Profile />
+                        </ProtectedRoute>
+                    }
+                />
 
-                {/* Company protected routes */}
+                {/* Company */}
                 <Route
                     path="/company/dashboard"
                     element={
