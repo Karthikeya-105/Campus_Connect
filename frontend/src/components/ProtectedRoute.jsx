@@ -10,9 +10,9 @@ function ProtectedRoute({ children, requiredRole }) {
     }
 
     if (requiredRole && role !== requiredRole) {
-        // Wrong role → send to their own dashboard
         if (role === 'COMPANY') return <Navigate to="/company/dashboard" replace />;
         if (role === 'STUDENT') return <Navigate to="/dashboard" replace />;
+        if (role === 'ADMIN') return <Navigate to="/admin/dashboard" replace />;
         return <Navigate to="/login" replace />;
     }
 

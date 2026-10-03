@@ -8,6 +8,8 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
 
 import CompanyRegister from './pages/CompanyRegister';
 import CompanyLogin from './pages/CompanyLogin';
@@ -91,6 +93,15 @@ function App() {
                     element={
                         <ProtectedRoute requiredRole="COMPANY">
                             <JobApplicants />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route
+                    path="/admin/dashboard"
+                    element={
+                        <ProtectedRoute requiredRole="ADMIN">
+                            <AdminDashboard />
                         </ProtectedRoute>
                     }
                 />

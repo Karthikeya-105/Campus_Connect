@@ -49,8 +49,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/resume/ats-score/**").hasRole("STUDENT")
                         .requestMatchers(HttpMethod.POST, "/api/resume/ats-score-company/**").hasRole("COMPANY")
                         .requestMatchers(HttpMethod.GET, "/api/resume/view/**").authenticated()
-                        .anyRequest().authenticated()
-                )
+                        .requestMatchers(HttpMethod.GET, "/api/admin/**").hasRole("ADMIN")     // ⬅️ NEW
+                        .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

@@ -10,27 +10,27 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "students")
+@Table(name = "admins")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Student {
+public class Admin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
+    @Column(nullable = false)
     private String name;
+
+    @Column(unique = true, nullable = false)
     private String email;
+
     @JsonIgnore
+    @Column(nullable = false)
     private String password;
-    private  String rollNumber;
-    private  String branch;
-    private Double cgpa;
-    private String resumeUrl;
+
     @CreationTimestamp
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
-
-
 }

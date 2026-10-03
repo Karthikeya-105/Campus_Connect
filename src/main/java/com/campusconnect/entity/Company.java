@@ -1,5 +1,6 @@
 package com.campusconnect.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +22,7 @@ public class Company {
     private String name;
     @Column(unique = true, nullable = false)
     private String email;
-
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 

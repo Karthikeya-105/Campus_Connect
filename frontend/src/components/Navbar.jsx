@@ -12,6 +12,13 @@ function Navbar() {
         navigate('/login');
     };
 
+    const dashboardPath =
+        role === 'COMPANY'
+            ? '/company/dashboard'
+            : role === 'ADMIN'
+                ? '/admin/dashboard'
+                : '/dashboard';
+
     return (
         <nav className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 bg-white/80 backdrop-blur-md border-b border-slate-200 md:px-10">
             <Link to="/" className="text-lg font-bold tracking-tight text-slate-900">
@@ -30,40 +37,25 @@ function Navbar() {
 
                         {role === 'STUDENT' && (
                             <>
-                                <Link
-                                    to="/jobs"
-                                    className="font-medium text-slate-700 hover:text-indigo-600 transition-colors"
-                                >
+                                <Link to="/jobs" className="font-medium text-slate-700 hover:text-indigo-600 transition-colors">
                                     Jobs
                                 </Link>
-                                <Link
-                                    to="/applications"
-                                    className="font-medium text-slate-700 hover:text-indigo-600 transition-colors"
-                                >
+                                <Link to="/applications" className="font-medium text-slate-700 hover:text-indigo-600 transition-colors">
                                     Applications
                                 </Link>
-                                <Link
-                                    to="/profile"
-                                    className="font-medium text-slate-700 hover:text-indigo-600 transition-colors"
-                                >
+                                <Link to="/profile" className="font-medium text-slate-700 hover:text-indigo-600 transition-colors">
                                     Profile
                                 </Link>
                             </>
                         )}
 
                         {role === 'COMPANY' && (
-                            <Link
-                                to="/company/jobs"
-                                className="font-medium text-slate-700 hover:text-indigo-600 transition-colors"
-                            >
+                            <Link to="/company/jobs" className="font-medium text-slate-700 hover:text-indigo-600 transition-colors">
                                 My Jobs
                             </Link>
                         )}
 
-                        <Link
-                            to={role === 'COMPANY' ? '/company/dashboard' : '/dashboard'}
-                            className="font-medium text-slate-700 hover:text-indigo-600 transition-colors"
-                        >
+                        <Link to={dashboardPath} className="font-medium text-slate-700 hover:text-indigo-600 transition-colors">
                             Dashboard
                         </Link>
 
@@ -76,22 +68,13 @@ function Navbar() {
                     </>
                 ) : (
                     <>
-                        <Link
-                            to="/jobs"
-                            className="font-medium text-slate-700 hover:text-indigo-600 transition-colors"
-                        >
+                        <Link to="/jobs" className="font-medium text-slate-700 hover:text-indigo-600 transition-colors">
                             Jobs
                         </Link>
-                        <Link
-                            to="/login"
-                            className="font-medium text-slate-700 hover:text-indigo-600 transition-colors"
-                        >
+                        <Link to="/login" className="font-medium text-slate-700 hover:text-indigo-600 transition-colors">
                             Student Login
                         </Link>
-                        <Link
-                            to="/company/login"
-                            className="font-medium text-slate-700 hover:text-indigo-600 transition-colors"
-                        >
+                        <Link to="/company/login" className="font-medium text-slate-700 hover:text-indigo-600 transition-colors">
                             Company Login
                         </Link>
                         <Link
@@ -99,6 +82,12 @@ function Navbar() {
                             className="rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-700 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/30 transition-all"
                         >
                             Sign Up
+                        </Link>
+                        <Link
+                            to="/admin/login"
+                            className="text-xs font-medium text-slate-400 hover:text-slate-700 transition-colors"
+                        >
+                            Admin
                         </Link>
                     </>
                 )}
