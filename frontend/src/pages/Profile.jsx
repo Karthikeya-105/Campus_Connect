@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import api from '../services/api';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
@@ -7,23 +8,19 @@ function Profile() {
     const [resumeUrl, setResumeUrl] = useState(localStorage.getItem('resumeUrl') || '');
     const [file, setFile] = useState(null);
     const [uploading, setUploading] = useState(false);
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
     const [dragOver, setDragOver] = useState(false);
 
     const name = localStorage.getItem('name');
     const email = localStorage.getItem('email');
 
     const handleFileChange = (selected) => {
-        setError('');
-        setSuccess('');
         if (!selected) return;
         if (selected.type !== 'application/pdf') {
-            setError('Only PDF files are allowed.');
+            toast.error('Only PDF files are allowed.');
             return;
         }
         if (selected.size > 5 * 1024 * 1024) {
-            setError('File too large. Max 5 MB.');
+            toast.error('File too large. Max 5 MB.');
             return;
         }
         setFile(selected);
@@ -31,12 +28,10 @@ function Profile() {
 
     const handleUpload = async () => {
         if (!file) {
-            setError('Please select a file first.');
+            toast.error('Please select a file first.');
             return;
         }
         setUploading(true);
-        setError('');
-        setSuccess('');
 
         const formData = new FormData();
         formData.append('file', file);
@@ -47,10 +42,10 @@ function Profile() {
             });
             setResumeUrl(res.data.resumeUrl);
             localStorage.setItem('resumeUrl', res.data.resumeUrl);
-            setSuccess('Resume uploaded successfully!');
+            toast.success('Resume uploaded successfully!');
             setFile(null);
         } catch (err) {
-            setError(err.response?.data?.error || 'Upload failed.');
+            toast.error(err.response?.data?.error || 'Upload failed.');
         } finally {
             setUploading(false);
         }
@@ -62,7 +57,6 @@ function Profile() {
                 <h1 className="text-3xl font-bold tracking-tight text-slate-900">My Profile</h1>
                 <p className="mt-2 text-slate-500">Manage your details and resume.</p>
 
-                {/* Personal info */}
                 <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                     <h2 className="text-lg font-semibold text-slate-900">Personal Information</h2>
                     <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -77,7 +71,6 @@ function Profile() {
                     </div>
                 </div>
 
-                {/* Resume upload */}
                 <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                     <h2 className="text-lg font-semibold text-slate-900">Resume</h2>
                     <p className="mt-1 text-sm text-slate-500">PDF only, max 5 MB.</p>
@@ -138,17 +131,6 @@ function Profile() {
                             </p>
                         )}
                     </div>
-
-                    {error && (
-                        <div className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                            {error}
-                        </div>
-                    )}
-                    {success && (
-                        <div className="mt-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
-                            {success}
-                        </div>
-                    )}
 
                     <button
                         onClick={handleUpload}

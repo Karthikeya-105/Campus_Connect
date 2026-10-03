@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import api from '../services/api';
 
 function JobDetails() {
@@ -12,12 +13,9 @@ function JobDetails() {
 
     const [applying, setApplying] = useState(false);
     const [applied, setApplied] = useState(false);
-    const [applyError, setApplyError] = useState('');
-    const [applySuccess, setApplySuccess] = useState('');
 
     const [ats, setAts] = useState(null);
     const [atsLoading, setAtsLoading] = useState(false);
-    const [atsError, setAtsError] = useState('');
 
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
@@ -40,16 +38,13 @@ function JobDetails() {
         if (!token) return navigate('/login');
         if (role !== 'STUDENT') return;
 
-        setApplyError('');
-        setApplySuccess('');
         setApplying(true);
-
         try {
             await api.post('/applications', { jobPostingId: Number(id) });
             setApplied(true);
-            setApplySuccess('Application submitted successfully!');
+            toast.success('Application submitted successfully!');
         } catch (err) {
-            setApplyError(err.response?.data?.error || 'Failed to submit application.');
+            toast.error(err.response?.data?.error || 'Failed to submit application.');
         } finally {
             setApplying(false);
         }
@@ -57,12 +52,11 @@ function JobDetails() {
 
     const checkAts = async () => {
         setAtsLoading(true);
-        setAtsError('');
         try {
             const res = await api.post(`/resume/ats-score/${id}`);
             setAts(res.data);
         } catch (err) {
-            setAtsError(err.response?.data?.error || 'Could not calculate ATS score.');
+            toast.error(err.response?.data?.error || 'Could not calculate ATS score.');
         } finally {
             setAtsLoading(false);
         }
@@ -84,7 +78,6 @@ function JobDetails() {
                     ← Back to all jobs
                 </Link>
 
-                {/* Header card */}
                 <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
                     <div className="flex items-start gap-5">
                         <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-700 text-2xl font-bold text-white">
@@ -121,7 +114,6 @@ function JobDetails() {
                     </div>
                 </div>
 
-                {/* Description */}
                 <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
                     <h2 className="text-lg font-semibold text-slate-900">Job Description</h2>
                     <p className="mt-4 whitespace-pre-line leading-relaxed text-slate-600">
@@ -145,7 +137,6 @@ function JobDetails() {
                     )}
                 </div>
 
-                {/* ATS Score (student only) */}
                 {role === 'STUDENT' && (
                     <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                         <div className="flex items-center justify-between flex-wrap gap-4">
@@ -163,12 +154,6 @@ function JobDetails() {
                                 {atsLoading ? 'Calculating…' : 'Check ATS Score'}
                             </button>
                         </div>
-
-                        {atsError && (
-                            <div className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                                {atsError}
-                            </div>
-                        )}
 
                         {ats && (
                             <div className="mt-6">
@@ -238,7 +223,6 @@ function JobDetails() {
                     </div>
                 )}
 
-                {/* Apply action */}
                 <div className="mt-6 flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:flex-row md:items-center md:justify-between">
                     <div>
                         <p className="text-sm text-slate-500">Interested in this role?</p>
@@ -276,17 +260,6 @@ function JobDetails() {
                         </Link>
                     )}
                 </div>
-
-                {applySuccess && (
-                    <div className="mt-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
-                        {applySuccess}
-                    </div>
-                )}
-                {applyError && (
-                    <div className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                        {applyError}
-                    </div>
-                )}
             </div>
         </div>
     );

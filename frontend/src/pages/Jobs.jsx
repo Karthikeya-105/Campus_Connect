@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import { SkeletonJobCard } from '../components/Skeleton';
 
 function Jobs() {
     const [jobs, setJobs] = useState([]);
@@ -36,7 +37,6 @@ function Jobs() {
 
     return (
         <div className="min-h-screen bg-slate-50">
-            {/* Header */}
             <div className="bg-white border-b border-slate-200">
                 <div className="max-w-6xl mx-auto px-6 py-12 md:py-16">
                     <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
@@ -48,10 +48,14 @@ function Jobs() {
                 </div>
             </div>
 
-            {/* Job list */}
             <div className="max-w-6xl mx-auto px-6 py-10">
                 {loading && (
-                    <div className="text-center py-20 text-slate-500">Loading jobs…</div>
+                    <div className="grid gap-4 md:grid-cols-2">
+                        <SkeletonJobCard />
+                        <SkeletonJobCard />
+                        <SkeletonJobCard />
+                        <SkeletonJobCard />
+                    </div>
                 )}
 
                 {error && (

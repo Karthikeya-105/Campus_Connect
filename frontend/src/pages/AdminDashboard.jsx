@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api';
 import AdminAnalytics from './AdminAnalytics';
+import { SkeletonTable } from '../components/Skeleton';
 
 const TABS = ['Overview', 'Students', 'Companies', 'Jobs', 'Applications', 'Analytics'];
 
@@ -94,7 +95,6 @@ function AdminDashboard() {
     return (
         <div className="min-h-screen bg-slate-50">
             <div className="max-w-7xl mx-auto px-6 py-10">
-                {/* Header */}
                 <div className="mb-8">
                     <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
                         🛡️ Admin
@@ -113,7 +113,6 @@ function AdminDashboard() {
                     </div>
                 )}
 
-                {/* Stat cards */}
                 <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
                     {statCards.map((c) => (
                         <div
@@ -131,7 +130,6 @@ function AdminDashboard() {
                     ))}
                 </div>
 
-                {/* Placement stats */}
                 {placement && (
                     <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                         <div className="flex items-center justify-between flex-wrap gap-4">
@@ -168,7 +166,6 @@ function AdminDashboard() {
                     </div>
                 )}
 
-                {/* Tabs */}
                 <div className="mt-8 flex flex-wrap gap-2 border-b border-slate-200">
                     {TABS.map((t) => (
                         <button
@@ -252,7 +249,7 @@ function AdminDashboard() {
 
 function DataTable({ columns, rows, loading, empty }) {
     if (loading) {
-        return <div className="text-center py-12 text-slate-500">Loading…</div>;
+        return <SkeletonTable rows={5} />;
     }
     if (rows.length === 0) {
         return (

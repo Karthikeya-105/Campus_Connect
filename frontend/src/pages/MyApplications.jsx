@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
+import { SkeletonCard } from '../components/Skeleton';
 
 const STATUS_STYLES = {
     APPLIED: 'bg-slate-100 text-slate-700',
@@ -41,7 +42,11 @@ function MyApplications() {
                 </div>
 
                 {loading && (
-                    <div className="text-center py-20 text-slate-500">Loading applications…</div>
+                    <div className="grid gap-4">
+                        <SkeletonCard />
+                        <SkeletonCard />
+                        <SkeletonCard />
+                    </div>
                 )}
 
                 {error && (

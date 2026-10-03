@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
+import { SkeletonJobCard } from '../components/Skeleton';
 
 function CompanyJobs() {
     const [jobs, setJobs] = useState([]);
@@ -26,7 +27,6 @@ function CompanyJobs() {
     return (
         <div className="min-h-screen bg-slate-50">
             <div className="max-w-5xl mx-auto px-6 py-10">
-                {/* Header */}
                 <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
                     <div>
                         <h1 className="text-3xl font-bold tracking-tight text-slate-900">
@@ -46,19 +46,19 @@ function CompanyJobs() {
                     </Link>
                 </div>
 
-                {/* Loading */}
                 {loading && (
-                    <div className="text-center py-20 text-slate-500">Loading jobs…</div>
+                    <div className="grid gap-4">
+                        <SkeletonJobCard />
+                        <SkeletonJobCard />
+                    </div>
                 )}
 
-                {/* Error */}
                 {error && (
                     <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                         {error}
                     </div>
                 )}
 
-                {/* Empty state */}
                 {!loading && jobs.length === 0 && !error && (
                     <div className="rounded-2xl border border-dashed border-slate-300 bg-white py-20 text-center">
                         <div className="text-5xl mb-4">📭</div>
@@ -75,7 +75,6 @@ function CompanyJobs() {
                     </div>
                 )}
 
-                {/* Job cards */}
                 <div className="grid gap-4">
                     {jobs.map((job, i) => (
                         <div

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import api from '../services/api';
+import { SkeletonCard } from '../components/Skeleton';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
@@ -44,8 +46,9 @@ function JobApplicants() {
             setApplications((prev) =>
                 prev.map((a) => (a.id === applicationId ? { ...a, status: res.data.status } : a))
             );
+            toast.success(`Application ${newStatus.toLowerCase()}`);
         } catch (err) {
-            alert(err.response?.data?.error || 'Failed to update status.');
+            toast.error(err.response?.data?.error || 'Failed to update status.');
         } finally {
             setUpdatingId(null);
         }
@@ -56,7 +59,7 @@ function JobApplicants() {
             const res = await api.post(`/resume/ats-score-company/${applicationId}`);
             setAtsScores((prev) => ({ ...prev, [applicationId]: res.data }));
         } catch (err) {
-            alert(err.response?.data?.error || 'Failed to calculate ATS score.');
+            toast.error(err.response?.data?.error || 'Failed to calculate ATS score.');
         }
     };
 
@@ -79,7 +82,10 @@ function JobApplicants() {
                 </div>
 
                 {loading && (
-                    <div className="text-center py-20 text-slate-500">Loading applicants…</div>
+                    <div className="grid gap-4">
+                        <SkeletonCard />
+                        <SkeletonCard />
+                    </div>
                 )}
 
                 {error && (
@@ -159,7 +165,6 @@ function JobApplicants() {
                                     </div>
                                 </div>
 
-                                {/* Resume + ATS actions */}
                                 <div className="mt-4 flex flex-wrap items-center gap-3">
                                     {app.studentResumeUrl ? (
                                         <a
@@ -206,7 +211,6 @@ function JobApplicants() {
                                     </div>
                                 )}
 
-                                {/* Action buttons */}
                                 <div className="mt-5 flex flex-wrap gap-2 border-t border-slate-100 pt-5">
                                     <button
                                         onClick={() => updateStatus(app.id, 'SHORTLISTED')}

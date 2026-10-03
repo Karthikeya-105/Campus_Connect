@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -8,8 +9,6 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
-import AdminLogin from './pages/AdminLogin';
-import AdminDashboard from './pages/AdminDashboard';
 
 import CompanyRegister from './pages/CompanyRegister';
 import CompanyLogin from './pages/CompanyLogin';
@@ -22,10 +21,31 @@ import Jobs from './pages/Jobs';
 import JobDetails from './pages/JobDetails';
 import MyApplications from './pages/MyApplications';
 
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
+
 function App() {
     return (
         <BrowserRouter>
             <Navbar />
+            <Toaster
+                position="top-right"
+                toastOptions={{
+                    duration: 3000,
+                    style: {
+                        borderRadius: '10px',
+                        background: '#1e293b',
+                        color: '#fff',
+                        fontSize: '14px',
+                    },
+                    success: {
+                        iconTheme: { primary: '#10b981', secondary: '#fff' },
+                    },
+                    error: {
+                        iconTheme: { primary: '#ef4444', secondary: '#fff' },
+                    },
+                }}
+            />
             <Routes>
                 <Route path="/" element={<Navigate to="/login" replace />} />
 
@@ -36,6 +56,7 @@ function App() {
                 <Route path="/company/login" element={<CompanyLogin />} />
                 <Route path="/jobs" element={<Jobs />} />
                 <Route path="/jobs/:id" element={<JobDetails />} />
+                <Route path="/admin/login" element={<AdminLogin />} />
 
                 {/* Student */}
                 <Route
@@ -96,7 +117,8 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
-                <Route path="/admin/login" element={<AdminLogin />} />
+
+                {/* Admin */}
                 <Route
                     path="/admin/dashboard"
                     element={

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api';
+import { SkeletonCard } from '../components/Skeleton';
 import {
     LineChart,
     Line,
@@ -59,7 +60,14 @@ function AdminAnalytics() {
     }, []);
 
     if (loading) {
-        return <div className="text-center py-20 text-slate-500">Loading analytics…</div>;
+        return (
+            <div className="grid gap-6 md:grid-cols-2">
+                <SkeletonCard />
+                <SkeletonCard />
+                <SkeletonCard />
+                <SkeletonCard />
+            </div>
+        );
     }
 
     if (error) {
@@ -72,35 +80,19 @@ function AdminAnalytics() {
 
     return (
         <div className="grid gap-6">
-            {/* Row 1: Jobs per month + Applications by status */}
             <div className="grid gap-6 md:grid-cols-2">
-                {/* Jobs posted per month */}
                 <ChartCard title="Jobs Posted per Month" subtitle="Last 6 months">
                     <ResponsiveContainer width="100%" height={280}>
                         <LineChart data={jobsPerMonth}>
                             <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                             <XAxis dataKey="month" tick={{ fontSize: 12, fill: '#64748b' }} />
                             <YAxis tick={{ fontSize: 12, fill: '#64748b' }} allowDecimals={false} />
-                            <Tooltip
-                                contentStyle={{
-                                    borderRadius: 10,
-                                    border: '1px solid #e2e8f0',
-                                    fontSize: 13,
-                                }}
-                            />
-                            <Line
-                                type="monotone"
-                                dataKey="count"
-                                stroke="#4f46e5"
-                                strokeWidth={3}
-                                dot={{ fill: '#4f46e5', r: 4 }}
-                                activeDot={{ r: 6 }}
-                            />
+                            <Tooltip contentStyle={{ borderRadius: 10, border: '1px solid #e2e8f0', fontSize: 13 }} />
+                            <Line type="monotone" dataKey="count" stroke="#4f46e5" strokeWidth={3} dot={{ fill: '#4f46e5', r: 4 }} activeDot={{ r: 6 }} />
                         </LineChart>
                     </ResponsiveContainer>
                 </ChartCard>
 
-                {/* Applications by status */}
                 <ChartCard title="Applications by Status" subtitle="Across all jobs">
                     <ResponsiveContainer width="100%" height={280}>
                         <PieChart>
@@ -116,27 +108,16 @@ function AdminAnalytics() {
                                 label={(entry) => `${entry.status} (${entry.count})`}
                             >
                                 {appsByStatus.map((entry, i) => (
-                                    <Cell
-                                        key={i}
-                                        fill={STATUS_COLORS[entry.status] || PIE_FALLBACK[i % PIE_FALLBACK.length]}
-                                    />
+                                    <Cell key={i} fill={STATUS_COLORS[entry.status] || PIE_FALLBACK[i % PIE_FALLBACK.length]} />
                                 ))}
                             </Pie>
-                            <Tooltip
-                                contentStyle={{
-                                    borderRadius: 10,
-                                    border: '1px solid #e2e8f0',
-                                    fontSize: 13,
-                                }}
-                            />
+                            <Tooltip contentStyle={{ borderRadius: 10, border: '1px solid #e2e8f0', fontSize: 13 }} />
                         </PieChart>
                     </ResponsiveContainer>
                 </ChartCard>
             </div>
 
-            {/* Row 2: Top companies + Branch placement */}
             <div className="grid gap-6 md:grid-cols-2">
-                {/* Top companies */}
                 <ChartCard title="Top Hiring Companies" subtitle="By number of applications">
                     {topCompanies.length === 0 ? (
                         <EmptyChart />
@@ -145,26 +126,14 @@ function AdminAnalytics() {
                             <BarChart data={topCompanies} layout="vertical">
                                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                                 <XAxis type="number" tick={{ fontSize: 12, fill: '#64748b' }} allowDecimals={false} />
-                                <YAxis
-                                    type="category"
-                                    dataKey="company"
-                                    tick={{ fontSize: 12, fill: '#64748b' }}
-                                    width={140}
-                                />
-                                <Tooltip
-                                    contentStyle={{
-                                        borderRadius: 10,
-                                        border: '1px solid #e2e8f0',
-                                        fontSize: 13,
-                                    }}
-                                />
+                                <YAxis type="category" dataKey="company" tick={{ fontSize: 12, fill: '#64748b' }} width={140} />
+                                <Tooltip contentStyle={{ borderRadius: 10, border: '1px solid #e2e8f0', fontSize: 13 }} />
                                 <Bar dataKey="count" fill="#4f46e5" radius={[0, 6, 6, 0]} />
                             </BarChart>
                         </ResponsiveContainer>
                     )}
                 </ChartCard>
 
-                {/* Branch-wise placement */}
                 <ChartCard title="Branch-wise Placement" subtitle="Total vs Selected">
                     {branchPlacement.length === 0 ? (
                         <EmptyChart />
@@ -174,13 +143,7 @@ function AdminAnalytics() {
                                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                                 <XAxis dataKey="branch" tick={{ fontSize: 12, fill: '#64748b' }} />
                                 <YAxis tick={{ fontSize: 12, fill: '#64748b' }} allowDecimals={false} />
-                                <Tooltip
-                                    contentStyle={{
-                                        borderRadius: 10,
-                                        border: '1px solid #e2e8f0',
-                                        fontSize: 13,
-                                    }}
-                                />
+                                <Tooltip contentStyle={{ borderRadius: 10, border: '1px solid #e2e8f0', fontSize: 13 }} />
                                 <Legend wrapperStyle={{ fontSize: 12 }} />
                                 <Bar dataKey="total" fill="#818cf8" radius={[6, 6, 0, 0]} name="Total" />
                                 <Bar dataKey="selected" fill="#10b981" radius={[6, 6, 0, 0]} name="Selected" />
@@ -190,40 +153,20 @@ function AdminAnalytics() {
                 </ChartCard>
             </div>
 
-            {/* Row 3: Applications over time (full width) */}
             <ChartCard title="Application Activity" subtitle="Last 14 days">
                 <ResponsiveContainer width="100%" height={280}>
                     <LineChart data={appsOverTime}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                        <XAxis
-                            dataKey="date"
-                            tick={{ fontSize: 11, fill: '#64748b' }}
-                            tickFormatter={(v) => v.slice(5)}
-                        />
+                        <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#64748b' }} tickFormatter={(v) => v.slice(5)} />
                         <YAxis tick={{ fontSize: 12, fill: '#64748b' }} allowDecimals={false} />
-                        <Tooltip
-                            contentStyle={{
-                                borderRadius: 10,
-                                border: '1px solid #e2e8f0',
-                                fontSize: 13,
-                            }}
-                        />
-                        <Line
-                            type="monotone"
-                            dataKey="count"
-                            stroke="#10b981"
-                            strokeWidth={3}
-                            dot={{ fill: '#10b981', r: 4 }}
-                            activeDot={{ r: 6 }}
-                        />
+                        <Tooltip contentStyle={{ borderRadius: 10, border: '1px solid #e2e8f0', fontSize: 13 }} />
+                        <Line type="monotone" dataKey="count" stroke="#10b981" strokeWidth={3} dot={{ fill: '#10b981', r: 4 }} activeDot={{ r: 6 }} />
                     </LineChart>
                 </ResponsiveContainer>
             </ChartCard>
         </div>
     );
 }
-
-// ---- Helper components ----
 
 function ChartCard({ title, subtitle, children }) {
     return (
