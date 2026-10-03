@@ -50,6 +50,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/resume/ats-score-company/**").hasRole("COMPANY")
                         .requestMatchers(HttpMethod.GET, "/api/resume/view/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/notifications/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

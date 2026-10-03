@@ -9,6 +9,7 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
+import Notifications from './pages/Notifications';
 
 import CompanyRegister from './pages/CompanyRegister';
 import CompanyLogin from './pages/CompanyLogin';
@@ -124,6 +125,14 @@ function App() {
                     element={
                         <ProtectedRoute requiredRole="ADMIN">
                             <AdminDashboard />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/notifications"
+                    element={
+                        <ProtectedRoute>
+                            <Notifications />
                         </ProtectedRoute>
                     }
                 />
