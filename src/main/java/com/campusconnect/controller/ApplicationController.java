@@ -2,6 +2,7 @@ package com.campusconnect.controller;
 
 import com.campusconnect.dto.ApplicationRequestDTO;
 import com.campusconnect.dto.ApplicationResponseDTO;
+import com.campusconnect.dto.InterviewRequestDTO;
 import com.campusconnect.service.ApplicationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,6 @@ public class ApplicationController {
 
     private final ApplicationService applicationService;
 
-    // 1. Student applies to a job
     @PostMapping
     public ResponseEntity<ApplicationResponseDTO> apply(
             @Valid @RequestBody ApplicationRequestDTO request,
@@ -30,13 +30,11 @@ public class ApplicationController {
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-    // 2. Student's own applications
     @GetMapping("/me")
     public ResponseEntity<List<ApplicationResponseDTO>> getMyApplications(Authentication authentication) {
         return ResponseEntity.ok(applicationService.getMyApplications(authentication.getName()));
     }
 
-    // 3. Company views applicants for a job
     @GetMapping("/job/{jobId}")
     public ResponseEntity<List<ApplicationResponseDTO>> getApplicationsForJob(
             @PathVariable Long jobId,
@@ -46,7 +44,6 @@ public class ApplicationController {
                 applicationService.getApplicationsForJob(jobId, authentication.getName()));
     }
 
-    // 4. Company updates an application's status
     @PatchMapping("/{id}/status")
     public ResponseEntity<ApplicationResponseDTO> updateStatus(
             @PathVariable Long id,
@@ -55,6 +52,17 @@ public class ApplicationController {
 
         String newStatus = body.get("status");
         ApplicationResponseDTO updated = applicationService.updateStatus(id, newStatus, authentication.getName());
+        return ResponseEntity.ok(updated);
+    }
+
+    @PatchMapping("/{id}/interview")
+    public ResponseEntity<ApplicationResponseDTO> scheduleInterview(
+            @PathVariable Long id,
+            @Valid @RequestBody InterviewRequestDTO request,
+            Authentication authentication) {
+
+        ApplicationResponseDTO updated = applicationService.scheduleInterview(
+                id, request, authentication.getName());
         return ResponseEntity.ok(updated);
     }
 }

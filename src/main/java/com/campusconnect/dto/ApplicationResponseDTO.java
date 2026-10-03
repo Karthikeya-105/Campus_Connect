@@ -13,7 +13,7 @@ public class ApplicationResponseDTO {
     private String status;
     private LocalDateTime appliedAt;
 
-    // Student fields — only used when a company views applicants
+    // Student fields
     private Long studentId;
     private String studentName;
     private String studentEmail;
@@ -21,4 +21,10 @@ public class ApplicationResponseDTO {
     private String studentBranch;
     private Double studentCgpa;
     private String studentResumeUrl;
+
+    // Interview fields
+    private LocalDateTime interviewDate;
+    private String interviewMode;
+    private String interviewLink;
+    private String interviewNotes;
 }

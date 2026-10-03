@@ -96,6 +96,57 @@ function MyApplications() {
                 </span>
                             </div>
 
+                            {app.interviewDate && (
+                                <div className="mt-4 rounded-lg border border-indigo-200 bg-gradient-to-br from-indigo-50 to-indigo-100/50 p-4">
+                                    <div className="flex items-center gap-2 text-sm font-semibold text-indigo-800">
+                                        📅 Interview Scheduled
+                                    </div>
+                                    <div className="mt-3 grid grid-cols-1 gap-2 text-sm text-indigo-900 md:grid-cols-2">
+                                        <div>
+                                            <span className="text-indigo-500">When: </span>
+                                            {new Date(app.interviewDate).toLocaleString('en-IN', {
+                                                weekday: 'short',
+                                                day: 'numeric',
+                                                month: 'short',
+                                                year: 'numeric',
+                                                hour: 'numeric',
+                                                minute: '2-digit',
+                                            })}
+                                        </div>
+                                        <div>
+                                            <span className="text-indigo-500">Mode: </span>
+                                            {app.interviewMode === 'ONLINE' ? '🌐 Online' : '🏢 In Person'}
+                                        </div>
+                                    </div>
+
+                                    {app.interviewLink && (
+                                        <div className="mt-2 text-sm text-indigo-900">
+                      <span className="text-indigo-500">
+                        {app.interviewMode === 'ONLINE' ? 'Link: ' : 'Venue: '}
+                      </span>
+                                            {app.interviewMode === 'ONLINE' ? (
+                                                <a
+                                                    href={app.interviewLink}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="font-medium text-indigo-700 underline hover:text-indigo-900"
+                                                >
+                                                    {app.interviewLink}
+                                                </a>
+                                            ) : (
+                                                <span>{app.interviewLink}</span>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {app.interviewNotes && (
+                                        <div className="mt-3 rounded-md bg-white/70 p-3 text-sm italic text-indigo-800">
+                                            "{app.interviewNotes}"
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
                             <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
                 <span className="text-xs text-slate-500">
                   Applied on{' '}

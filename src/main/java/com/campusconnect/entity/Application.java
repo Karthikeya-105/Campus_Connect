@@ -32,9 +32,20 @@ public class Application {
     @JoinColumn(name = "job_posting_id", nullable = false)
     private JobPosting jobPosting;
 
-    // APPLIED / SHORTLISTED / REJECTED / SELECTED
     @Column(nullable = false)
     private String status = "APPLIED";
+
+    @Column(name = "interview_date")
+    private LocalDateTime interviewDate;
+
+    @Column(name = "interview_mode")
+    private String interviewMode;
+
+    @Column(name = "interview_link", length = 500)
+    private String interviewLink;
+
+    @Column(name = "interview_notes", columnDefinition = "TEXT")
+    private String interviewNotes;
 
     @CreationTimestamp
     @Column(name = "applied_at")
