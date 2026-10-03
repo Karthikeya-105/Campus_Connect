@@ -114,12 +114,16 @@ function JobApplicants() {
 
         setScheduling(true);
         try {
-            const res = await api.patch(`/applications/${selectedApp.id}/interview`, {
-                interviewDate: isoDateTime,
-                interviewMode: interviewForm.interviewMode,
-                interviewLink: interviewForm.interviewLink,
-                interviewNotes: interviewForm.interviewNotes,
-            });
+            const res = await api.patch(
+                `/applications/${selectedApp.id}/interview`,
+                {
+                    interviewDate: isoDateTime,
+                    interviewMode: interviewForm.interviewMode,
+                    interviewLink: interviewForm.interviewLink,
+                    interviewNotes: interviewForm.interviewNotes,
+                },
+                { timeout: 15000 }
+            );
             setApplications((prev) =>
                 prev.map((a) => (a.id === selectedApp.id ? { ...a, ...res.data } : a))
             );

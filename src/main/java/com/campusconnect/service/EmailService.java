@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,7 +22,7 @@ public class EmailService {
     @Value("${app.email.enabled:false}")
     private boolean emailEnabled;
 
-    // Plain-text email (kept for simple notifications)
+    @Async
     public void send(String to, String subject, String body) {
         if (!emailEnabled) {
             System.out.println(">>> EMAIL DISABLED — would have sent to " + to + ": " + subject);
@@ -45,7 +46,7 @@ public class EmailService {
         }
     }
 
-    // HTML email (for richer formatting — interview details, links, etc.)
+    @Async
     public void sendHtml(String to, String subject, String htmlBody) {
         if (!emailEnabled) {
             System.out.println(">>> EMAIL DISABLED — would have sent HTML to " + to + ": " + subject);
@@ -62,7 +63,7 @@ public class EmailService {
             helper.setFrom(fromAddress);
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setText(htmlBody, true); // true = interpret as HTML
+            helper.setText(htmlBody, true);
             mailSender.send(message);
             System.out.println(">>> HTML EMAIL SENT to " + to + ": " + subject);
         } catch (Exception e) {
