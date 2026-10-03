@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import com.campusconnect.service.AnalyticsService;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -15,6 +16,34 @@ import java.util.Map;
 public class AdminController {
 
     private final AdminService adminService;
+    private final AnalyticsService analyticsService;
+
+// ... existing endpoints ...
+
+    @GetMapping("/analytics/jobs-per-month")
+    public ResponseEntity<List<Map<String, Object>>> jobsPerMonth() {
+        return ResponseEntity.ok(analyticsService.jobsPerMonth());
+    }
+
+    @GetMapping("/analytics/applications-by-status")
+    public ResponseEntity<List<Map<String, Object>>> applicationsByStatus() {
+        return ResponseEntity.ok(analyticsService.applicationsByStatus());
+    }
+
+    @GetMapping("/analytics/top-companies")
+    public ResponseEntity<List<Map<String, Object>>> topCompanies() {
+        return ResponseEntity.ok(analyticsService.topCompanies(5));
+    }
+
+    @GetMapping("/analytics/branch-placement")
+    public ResponseEntity<List<Map<String, Object>>> branchPlacement() {
+        return ResponseEntity.ok(analyticsService.branchPlacement());
+    }
+
+    @GetMapping("/analytics/applications-over-time")
+    public ResponseEntity<List<Map<String, Object>>> applicationsOverTime() {
+        return ResponseEntity.ok(analyticsService.applicationsOverTime());
+    }
 
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Long>> stats() {

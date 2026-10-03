@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api';
+import AdminAnalytics from './AdminAnalytics';
 
-const TABS = ['Overview', 'Students', 'Companies', 'Jobs', 'Applications'];
+const TABS = ['Overview', 'Students', 'Companies', 'Jobs', 'Applications', 'Analytics'];
 
 function AdminDashboard() {
     const [tab, setTab] = useState('Overview');
@@ -16,7 +17,6 @@ function AdminDashboard() {
 
     const name = localStorage.getItem('name');
 
-    // Fetch stats + placement on mount
     useEffect(() => {
         const load = async () => {
             try {
@@ -33,7 +33,6 @@ function AdminDashboard() {
         load();
     }, []);
 
-    // Lazy-load each dataset when its tab is selected
     useEffect(() => {
         const loadTab = async () => {
             if (tab === 'Students' && students.length === 0) {
@@ -140,12 +139,10 @@ function AdminDashboard() {
                                 <h3 className="text-lg font-semibold text-slate-900">Placement Snapshot</h3>
                                 <p className="text-sm text-slate-500">Across all applications</p>
                             </div>
-                            <div className="flex items-center gap-3">
-                                <div className="text-right">
-                                    <div className="text-xs text-slate-500">Placement rate</div>
-                                    <div className="text-2xl font-bold text-indigo-600">
-                                        {placement.placementRate}%
-                                    </div>
+                            <div className="text-right">
+                                <div className="text-xs text-slate-500">Placement rate</div>
+                                <div className="text-2xl font-bold text-indigo-600">
+                                    {placement.placementRate}%
                                 </div>
                             </div>
                         </div>
@@ -245,13 +242,14 @@ function AdminDashboard() {
                             empty="No applications yet."
                         />
                     )}
+
+                    {tab === 'Analytics' && <AdminAnalytics />}
                 </div>
             </div>
         </div>
     );
 }
 
-// Reusable table
 function DataTable({ columns, rows, loading, empty }) {
     if (loading) {
         return <div className="text-center py-12 text-slate-500">Loading…</div>;
